@@ -1,0 +1,15 @@
+# Node
+node_modules/
+dist/
+build/
+
+# .NET
+bin/
+obj/
+
+# Env
+.env
+*.env.local
+
+# OS
+.DS_Store
