@@ -2,7 +2,6 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { logout } from '../features/auth/authSlice';
 
-// The shared page frame: a top nav bar + the current page below it.
 export default function Layout() {
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();

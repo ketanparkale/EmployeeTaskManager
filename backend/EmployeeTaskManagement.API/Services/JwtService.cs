@@ -21,7 +21,6 @@ public class JwtService
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
 
-        // Remember Me: 30 days, otherwise the normal expiry from config.
         var expiryMinutes = rememberMe ? 43200 : Convert.ToDouble(_configuration["Jwt:ExpiryInMinutes"]);
 
         var securityKey = new SymmetricSecurityKey(
@@ -37,7 +36,6 @@ public class JwtService
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Name, user.FullName),
 
-            // This is very important for authorization
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 

@@ -12,12 +12,10 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { user, loading, error } = useAppSelector((state) => state.auth);
 
-  // Clear any stale error when the page opens.
   useEffect(() => {
     dispatch(clearError());
   }, [dispatch]);
 
-  // Once we have a logged-in user, move to the dashboard.
   useEffect(() => {
     if (user) navigate('/dashboard');
   }, [user, navigate]);

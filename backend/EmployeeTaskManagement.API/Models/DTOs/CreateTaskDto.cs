@@ -23,7 +23,6 @@ public class CreateTaskDto
     [Required]
     public DateTime DueDate { get; set; }
 
-    // Which employee the task is assigned to. Employees can only assign to themselves.
     [Required]
     public int AssignedToUserId { get; set; }
 }

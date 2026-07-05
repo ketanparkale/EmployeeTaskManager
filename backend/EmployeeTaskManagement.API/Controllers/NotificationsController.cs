@@ -22,7 +22,6 @@ public class NotificationsController : ControllerBase
     private int CurrentUserId =>
         int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-    // GET: api/notifications -> current user's notifications, newest first.
     [HttpGet]
     public async Task<IActionResult> GetMyNotifications()
     {
@@ -43,7 +42,6 @@ public class NotificationsController : ControllerBase
         return Ok(notifications);
     }
 
-    // PUT: api/notifications/5/read
     [HttpPut("{id}/read")]
     public async Task<IActionResult> MarkAsRead(int id)
     {
@@ -59,7 +57,6 @@ public class NotificationsController : ControllerBase
         return NoContent();
     }
 
-    // PUT: api/notifications/read-all
     [HttpPut("read-all")]
     public async Task<IActionResult> MarkAllAsRead()
     {

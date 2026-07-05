@@ -6,9 +6,6 @@ import { store } from './app/store';
 import App from './App.tsx';
 import './index.css';
 
-// Entry point. Two wrappers matter here:
-// - <Provider> gives every component access to the Redux store.
-// - <BrowserRouter> enables URL-based routing (React Router).
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>

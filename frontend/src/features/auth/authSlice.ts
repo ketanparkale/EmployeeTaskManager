@@ -3,12 +3,11 @@ import api from '../../api/client';
 import type { AuthUser, Role } from '../../types';
 
 interface AuthState {
-  user: AuthUser | null;   // null = nobody logged in
-  loading: boolean;        // true while a login/register request is in flight
-  error: string | null;    // last error message to show the user
+  user: AuthUser | null;
+  loading: boolean;
+  error: string | null;
 }
 
-// When the app starts, try to restore the user we saved last time.
 const savedUser = localStorage.getItem('user');
 const initialState: AuthState = {
   user: savedUser ? (JSON.parse(savedUser) as AuthUser) : null,
@@ -16,14 +15,11 @@ const initialState: AuthState = {
   error: null,
 };
 
-// A small helper to pull a readable message out of an axios error.
 function getErrorMessage(err: unknown, fallback: string): string {
   const anyErr = err as { response?: { data?: { message?: string } } };
   return anyErr.response?.data?.message ?? fallback;
 }
 
-// --- LOGIN ---
-// Calls POST /auth/login. On success the backend returns the token + user info.
 export const login = createAsyncThunk(
   'auth/login',
   async (
@@ -39,8 +35,6 @@ export const login = createAsyncThunk(
   }
 );
 
-// --- REGISTER ---
-// Calls POST /auth/register. Returns the success message on success.
 export const register = createAsyncThunk(
   'auth/register',
   async (
@@ -58,7 +52,6 @@ export const register = createAsyncThunk(
       const res = await api.post('/auth/register', payload);
       return res.data as { message: string };
     } catch (err) {
-      // Model-validation errors come back in a different shape; handle both.
       const anyErr = err as {
         response?: { data?: { message?: string; errors?: Record<string, string[]> } };
       };
@@ -75,7 +68,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Log out: forget the user everywhere.
     logout(state) {
       state.user = null;
       state.error = null;
@@ -86,7 +78,6 @@ const authSlice = createSlice({
       state.error = null;
     },
   },
-  // extraReducers react to the async thunks above (pending/fulfilled/rejected).
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -96,7 +87,6 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        // Persist so a refresh keeps us logged in.
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('user', JSON.stringify(action.payload));
       })

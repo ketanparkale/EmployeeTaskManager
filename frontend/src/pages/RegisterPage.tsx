@@ -13,7 +13,6 @@ export default function RegisterPage() {
   const [department, setDepartment] = useState('');
   const [designation, setDesignation] = useState('');
 
-  // Field-level validation messages we compute on the client.
   const [validationError, setValidationError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -21,7 +20,6 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const { loading, error } = useAppSelector((state) => state.auth);
 
-  // Same password rule the backend enforces: 8+ chars, upper, lower, number.
   const passwordOk = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
 
   async function handleSubmit(e: FormEvent) {
@@ -38,12 +36,10 @@ export default function RegisterPage() {
     }
 
     try {
-      // unwrap() throws if the thunk failed, so we can await success/failure.
       await dispatch(register({ fullName, email, password, role, department, designation })).unwrap();
       setSuccess('Registration successful! Redirecting to sign in…');
       setTimeout(() => navigate('/login'), 1200);
     } catch {
-      // The API error is already stored in Redux and shown below.
     }
   }
 

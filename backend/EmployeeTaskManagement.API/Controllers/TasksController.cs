@@ -18,7 +18,7 @@ public class TasksController : ControllerBase
     private readonly IWebHostEnvironment _env;
 
     private static readonly string[] AllowedExtensions = { ".pdf", ".jpg", ".jpeg", ".png" };
-    private const long MaxFileSize = 5 * 1024 * 1024; // 5 MB
+    private const long MaxFileSize = 5 * 1024 * 1024;
 
     public TasksController(ApplicationDbContext context, IWebHostEnvironment env)
     {
@@ -26,13 +26,11 @@ public class TasksController : ControllerBase
         _env = env;
     }
 
-    // Current user's id, taken from the JWT.
     private int CurrentUserId =>
         int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
     private bool IsAdmin => User.IsInRole(UserRole.Admin.ToString());
 
-    // GET: api/tasks  -> admins see all, employees see only their own.
     [HttpGet]
     public async Task<IActionResult> GetTasks()
     {
@@ -52,7 +50,6 @@ public class TasksController : ControllerBase
         return Ok(tasks.Select(ToDto));
     }
 
-    // GET: api/tasks/5
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTask(int id)
     {
@@ -69,14 +66,12 @@ public class TasksController : ControllerBase
         return Ok(ToDto(task));
     }
 
-    // POST: api/tasks
     [HttpPost]
     public async Task<IActionResult> CreateTask(CreateTaskDto dto)
     {
         if (dto.DueDate < dto.StartDate)
             return BadRequest(new { Message = "Due date must not be earlier than start date." });
 
-        // Employees can only create tasks for themselves.
         var assignedToUserId = IsAdmin ? dto.AssignedToUserId : CurrentUserId;
 
         var assignee = await _context.Users.FindAsync(assignedToUserId);
@@ -99,17 +94,14 @@ public class TasksController : ControllerBase
         _context.TaskItems.Add(task);
         await _context.SaveChangesAsync();
 
-        // Notify the assignee that a task was assigned to them.
         AddNotification(assignedToUserId, $"You have been assigned a new task: {task.Title}", "Assigned", task.Id);
         await _context.SaveChangesAsync();
 
-        // Attach the assignee so the response includes their name.
         task.AssignedToUser = assignee;
 
         return CreatedAtAction(nameof(GetTask), new { id = task.Id }, ToDto(task));
     }
 
-    // PUT: api/tasks/5
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTask(int id, UpdateTaskDto dto)
     {
@@ -121,7 +113,6 @@ public class TasksController : ControllerBase
         if (!IsAdmin && task.AssignedToUserId != CurrentUserId)
             return Forbid();
 
-        // Completed tasks are locked.
         if (task.Status == TaskItemStatus.Completed)
             return BadRequest(new { Message = "Completed tasks cannot be edited." });
 
@@ -145,8 +136,6 @@ public class TasksController : ControllerBase
         task.AssignedToUserId = assignedToUserId;
         task.UpdatedAt = DateTime.UtcNow;
 
-        // Notify on reassignment (completed tasks are already blocked above,
-        // so reaching Completed here always means a fresh completion).
         if (assignedToUserId != previousAssignee)
             AddNotification(assignedToUserId, $"You have been assigned a task: {task.Title}", "Assigned", task.Id);
 
@@ -159,7 +148,6 @@ public class TasksController : ControllerBase
         return Ok(ToDto(task));
     }
 
-    // DELETE: api/tasks/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTask(int id)
     {
@@ -177,7 +165,6 @@ public class TasksController : ControllerBase
         return NoContent();
     }
 
-    // POST: api/tasks/5/attachment  (multipart/form-data, field name "file")
     [HttpPost("{id}/attachment")]
     public async Task<IActionResult> UploadAttachment(int id, IFormFile file)
     {
@@ -217,7 +204,6 @@ public class TasksController : ControllerBase
         return Ok(new { task.AttachmentPath });
     }
 
-    // GET: api/tasks/5/attachment  -> downloads the stored file.
     [HttpGet("{id}/attachment")]
     public async Task<IActionResult> DownloadAttachment(int id)
     {
@@ -247,7 +233,6 @@ public class TasksController : ControllerBase
         return File(bytes, contentType, task.AttachmentPath);
     }
 
-    // Queues a notification; caller is responsible for SaveChangesAsync.
     private void AddNotification(int userId, string message, string type, int taskId)
     {
         _context.Notifications.Add(new Notification

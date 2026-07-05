@@ -21,7 +21,6 @@ public class UsersController : ControllerBase
         _context = context;
     }
 
-    // GET: api/users?search=&sortBy=name&sortDir=asc&page=1&pageSize=10
     [HttpGet]
     public async Task<IActionResult> GetEmployees(
         string? search = null,
@@ -70,7 +69,6 @@ public class UsersController : ControllerBase
         });
     }
 
-    // GET: api/users/5
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEmployee(int id)
     {
@@ -83,7 +81,6 @@ public class UsersController : ControllerBase
         return Ok(ToDto(user));
     }
 
-    // POST: api/users
     [HttpPost]
     public async Task<IActionResult> CreateEmployee(CreateEmployeeDto dto)
     {
@@ -107,7 +104,6 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetEmployee), new { id = user.Id }, ToDto(user));
     }
 
-    // PUT: api/users/5
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEmployee(int id, UpdateEmployeeDto dto)
     {
@@ -117,7 +113,6 @@ public class UsersController : ControllerBase
         if (user == null)
             return NotFound();
 
-        // Prevent taking an email already used by someone else.
         bool emailTaken = await _context.Users
             .AnyAsync(u => u.Email == dto.Email && u.Id != id);
         if (emailTaken)
@@ -133,7 +128,6 @@ public class UsersController : ControllerBase
         return Ok(ToDto(user));
     }
 
-    // DELETE: api/users/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(int id)
     {

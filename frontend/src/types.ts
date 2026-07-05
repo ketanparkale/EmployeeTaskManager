@@ -1,11 +1,8 @@
-// Shared TypeScript types used across the app.
-// These mirror the shapes the backend API returns.
 
 export type Role = 'Admin' | 'Employee';
 export type Priority = 'Low' | 'Medium' | 'High';
 export type Status = 'Pending' | 'InProgress' | 'Completed';
 
-// The logged-in user, as returned by POST /auth/login.
 export interface AuthUser {
   token: string;
   userId: number;
@@ -38,7 +35,6 @@ export interface Employee {
   designation: string;
 }
 
-// The paginated response shape from GET /users.
 export interface PagedResult<T> {
   items: T[];
   totalCount: number;

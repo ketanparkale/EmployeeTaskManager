@@ -6,10 +6,8 @@ public class Notification
 
     public string Message { get; set; } = string.Empty;
 
-    // "Assigned", "Completed", or "DueSoon" - used to dedupe due-soon alerts.
     public string Type { get; set; } = string.Empty;
 
-    // The task this notification refers to (null for non-task notifications).
     public int? TaskId { get; set; }
 
     public bool IsRead { get; set; }

@@ -13,7 +13,6 @@ const emptyForm = {
 export default function EmployeesPage() {
   const [data, setData] = useState<PagedResult<Employee> | null>(null);
 
-  // Search / sort / pagination controls (sent to the backend as query params).
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('name');
@@ -33,10 +32,8 @@ export default function EmployeesPage() {
     setData(res.data);
   }
 
-  // Reload whenever a control changes.
   useEffect(() => {
     loadEmployees();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, sortBy, sortDir, page]);
 
   function applySearch(e: FormEvent) {
@@ -45,7 +42,6 @@ export default function EmployeesPage() {
     setSearch(searchInput);
   }
 
-  // Click a column header to sort by it (toggles asc/desc).
   function toggleSort(column: string) {
     if (sortBy === column) {
       setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
@@ -84,7 +80,6 @@ export default function EmployeesPage() {
     setError('');
     try {
       if (editingId) {
-        // Update doesn't change the password.
         const { fullName, email, department, designation } = form;
         await api.put(`/users/${editingId}`, { fullName, email, department, designation });
       } else {
@@ -198,7 +193,6 @@ export default function EmployeesPage() {
         </table>
       </div>
 
-      {/* Pagination */}
       {data && data.totalPages > 1 && (
         <div className="toolbar" style={{ marginTop: '1rem' }}>
           <button className="btn btn-light btn-sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>Prev</button>

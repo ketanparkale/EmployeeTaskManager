@@ -1,4 +1,3 @@
-/* ---- Simple, responsive styles for the whole app ---- */
 
 * {
   box-sizing: border-box;
@@ -16,7 +15,6 @@ a {
   text-decoration: none;
 }
 
-/* ---- Navbar ---- */
 .navbar {
   display: flex;
   align-items: center;
@@ -51,14 +49,12 @@ a {
   font-size: 0.9rem;
 }
 
-/* ---- Layout ---- */
 .container {
   max-width: 1000px;
   margin: 1.5rem auto;
   padding: 0 1rem;
 }
 
-/* ---- Auth pages (centered card) ---- */
 .auth-wrapper {
   min-height: 100vh;
   display: flex;
@@ -78,7 +74,6 @@ a {
   margin-top: 0;
 }
 
-/* ---- Cards / stat tiles ---- */
 .card {
   background: #fff;
   border-radius: 10px;
@@ -109,7 +104,6 @@ a {
   margin-top: 0.25rem;
 }
 
-/* ---- Forms ---- */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -139,7 +133,6 @@ textarea {
   min-width: 160px;
 }
 
-/* ---- Buttons ---- */
 .btn {
   display: inline-block;
   padding: 0.55rem 1rem;
@@ -175,7 +168,6 @@ textarea {
   font-size: 0.8rem;
 }
 
-/* ---- Tables ---- */
 .table-wrap {
   overflow-x: auto;
 }
@@ -196,7 +188,6 @@ th {
   user-select: none;
 }
 
-/* ---- Badges ---- */
 .badge {
   display: inline-block;
   padding: 0.15rem 0.5rem;
@@ -211,7 +202,6 @@ th {
 .badge-medium { background: #fef3c7; color: #92400e; }
 .badge-high { background: #fee2e2; color: #991b1b; }
 
-/* ---- Helpers ---- */
 .error { color: #dc2626; font-size: 0.85rem; margin-top: 0.25rem; }
 .muted { color: #64748b; }
 .row-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }

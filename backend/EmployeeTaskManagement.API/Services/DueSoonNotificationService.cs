@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeTaskManagement.API.Services;
 
-// Periodically creates a one-time "due soon" notification for tasks whose
-// due date is within the next 24 hours and that aren't completed yet.
 public class DueSoonNotificationService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
@@ -27,7 +25,6 @@ public class DueSoonNotificationService : BackgroundService
             }
             catch
             {
-                // Swallow errors so a single bad run doesn't stop the loop.
             }
 
             await Task.Delay(CheckInterval, stoppingToken);
@@ -53,7 +50,6 @@ public class DueSoonNotificationService : BackgroundService
 
         var taskIds = dueSoonTasks.Select(t => t.Id).ToList();
 
-        // Tasks that already have a "DueSoon" notification - don't notify twice.
         var alreadyNotified = await context.Notifications
             .Where(n => n.Type == "DueSoon" && n.TaskId != null && taskIds.Contains(n.TaskId.Value))
             .Select(n => n.TaskId!.Value)

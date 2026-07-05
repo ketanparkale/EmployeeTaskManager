@@ -7,7 +7,6 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load the dashboard numbers once when the page opens.
   useEffect(() => {
     api
       .get('/dashboard')
@@ -18,7 +17,6 @@ export default function DashboardPage() {
   if (loading) return <p>Loading…</p>;
   if (!stats) return <p>Could not load the dashboard.</p>;
 
-  // Pick which four tiles to show based on the logged-in role.
   const tiles: [string, number][] =
     user?.role === 'Admin'
       ? [

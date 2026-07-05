@@ -1,6 +1,5 @@
 namespace EmployeeTaskManagement.API.DTOs;
 
-// Simple wrapper for paginated list responses.
 public class PagedResult<T>
 {
     public IEnumerable<T> Items { get; set; } = new List<T>();

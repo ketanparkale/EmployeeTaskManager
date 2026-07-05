@@ -21,7 +21,7 @@ public class AuthenticationService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
     {
-  
+
         bool emailExists = await _context.Users
             .AnyAsync(u => u.Email == request.Email);
 
@@ -37,7 +37,7 @@ public class AuthenticationService
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-    
+
         var user = new User
         {
             FullName = request.FullName,
@@ -48,7 +48,7 @@ public class AuthenticationService
             Designation = request.Designation
         };
 
-    
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
@@ -61,7 +61,7 @@ public class AuthenticationService
 
     public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto request)
     {
-     
+
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Email == request.Email);
 
@@ -70,7 +70,7 @@ public class AuthenticationService
             return null;
         }
 
-    
+
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(
             request.Password,
             user.PasswordHash);
@@ -80,7 +80,7 @@ public class AuthenticationService
             return null;
         }
 
-     
+
         string token = _jwtService.GenerateToken(user, request.RememberMe);
 
         return new LoginResponseDto

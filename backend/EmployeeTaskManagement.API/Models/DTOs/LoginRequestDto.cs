@@ -11,6 +11,5 @@ public class LoginRequestDto
     [Required]
     public string Password { get; set; } = string.Empty;
 
-    // When true, issue a longer-lived token so the session persists.
     public bool RememberMe { get; set; }
 }

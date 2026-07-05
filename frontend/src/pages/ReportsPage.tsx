@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import api from '../api/client';
 
-// Each report can be downloaded as Excel or CSV.
 const reports = [
   { key: 'completed', label: 'Completed Tasks' },
   { key: 'pending', label: 'Pending Tasks' },
@@ -11,7 +10,6 @@ const reports = [
 export default function ReportsPage() {
   const [busy, setBusy] = useState('');
 
-  // Fetch the file with the auth token, then trigger a browser download.
   async function download(key: string, format: 'excel' | 'csv') {
     setBusy(`${key}-${format}`);
     try {

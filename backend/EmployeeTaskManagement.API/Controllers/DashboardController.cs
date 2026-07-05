@@ -25,7 +25,6 @@ public class DashboardController : ControllerBase
 
     private bool IsAdmin => User.IsInRole(UserRole.Admin.ToString());
 
-    // GET: api/dashboard -> admin sees org-wide stats, employee sees their own.
     [HttpGet]
     public async Task<IActionResult> GetDashboard()
     {
@@ -38,7 +37,6 @@ public class DashboardController : ControllerBase
                 TotalTasks = await _context.TaskItems.CountAsync(),
                 CompletedTasks = await _context.TaskItems
                     .CountAsync(t => t.Status == TaskItemStatus.Completed),
-                // "Pending" here means any task not yet completed.
                 PendingTasks = await _context.TaskItems
                     .CountAsync(t => t.Status != TaskItemStatus.Completed)
             };

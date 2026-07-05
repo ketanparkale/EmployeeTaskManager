@@ -3,7 +3,6 @@ import api from '../api/client';
 import { useAppSelector } from '../app/hooks';
 import type { TaskItem, Employee, Priority, Status } from '../types';
 
-// The blank form state we reset to after creating/updating.
 const emptyForm = {
   title: '',
   description: '',
@@ -25,7 +24,6 @@ export default function TasksPage() {
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState('');
 
-  // Load tasks (and, for admins, the employee list for the assignee dropdown).
   async function loadTasks() {
     const res = await api.get<TaskItem[]>('/tasks');
     setTasks(res.data);
@@ -38,7 +36,6 @@ export default function TasksPage() {
     }
   }, [isAdmin]);
 
-  // Update one field of the form.
   function setField(name: keyof typeof form, value: string | number) {
     setForm((prev) => ({ ...prev, [name]: value }));
   }
@@ -56,7 +53,6 @@ export default function TasksPage() {
       description: task.description,
       priority: task.priority,
       status: task.status,
-      // <input type="date"> wants YYYY-MM-DD, so trim the time part.
       startDate: task.startDate.substring(0, 10),
       dueDate: task.dueDate.substring(0, 10),
       assignedToUserId: task.assignedToUserId,
@@ -70,7 +66,6 @@ export default function TasksPage() {
     e.preventDefault();
     setError('');
 
-    // Business rule (matches the backend): due date can't be before start date.
     if (new Date(form.dueDate) < new Date(form.startDate)) {
       setError('Due date must not be earlier than start date.');
       return;
@@ -78,7 +73,6 @@ export default function TasksPage() {
 
     const payload = {
       ...form,
-      // Employees always assign to themselves.
       assignedToUserId: isAdmin ? form.assignedToUserId : user!.userId,
     };
 
@@ -104,15 +98,12 @@ export default function TasksPage() {
     loadTasks();
   }
 
-  // Download/open an attachment. We fetch it through axios so the JWT token
-  // is included (a plain link wouldn't send it, and the endpoint needs auth).
   async function viewAttachment(taskId: number) {
     const res = await api.get(`/tasks/${taskId}/attachment`, { responseType: 'blob' });
     const url = URL.createObjectURL(res.data);
     window.open(url, '_blank');
   }
 
-  // Upload a file attachment for a task.
   async function handleUpload(taskId: number, file: File) {
     const data = new FormData();
     data.append('file', file);
@@ -230,18 +221,17 @@ export default function TasksPage() {
                   ) : (
                     <label className="btn btn-light btn-sm" style={{ cursor: 'pointer' }}>
                       Attach
-                      <input
-                        type="file"
-                        style={{ display: 'none' }}
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        onChange={(e) => e.target.files?.[0] && handleUpload(task.id, e.target.files[0])}
-                      />
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          onChange={(e) => e.target.files?.[0] && handleUpload(task.id, e.target.files[0])}
+                        />
                     </label>
                   )}
                 </td>
                 <td>
                   <div className="actions">
-                    {/* Completed tasks are locked from editing (backend rule). */}
                     {task.status !== 'Completed' && (
                       <button className="btn btn-light btn-sm" onClick={() => startEdit(task)}>Edit</button>
                     )}

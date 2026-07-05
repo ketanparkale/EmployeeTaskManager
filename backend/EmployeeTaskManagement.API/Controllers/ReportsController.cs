@@ -20,7 +20,6 @@ public class ReportsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/reports/completed?format=excel|csv
     [HttpGet("completed")]
     public async Task<IActionResult> CompletedTasks(string format = "excel")
     {
@@ -44,7 +43,6 @@ public class ReportsController : ControllerBase
         return Export(format, "CompletedTasks", headers, rows);
     }
 
-    // GET: api/reports/pending?format=excel|csv
     [HttpGet("pending")]
     public async Task<IActionResult> PendingTasks(string format = "excel")
     {
@@ -68,7 +66,6 @@ public class ReportsController : ControllerBase
         return Export(format, "PendingTasks", headers, rows);
     }
 
-    // GET: api/reports/employee-wise?format=excel|csv
     [HttpGet("employee-wise")]
     public async Task<IActionResult> EmployeeWise(string format = "excel")
     {
@@ -104,7 +101,6 @@ public class ReportsController : ControllerBase
         return Export(format, "EmployeeWiseTasks", headers, rows);
     }
 
-    // Picks CSV or Excel based on the format query param.
     private IActionResult Export(string format, string name, string[] headers, List<string[]> rows)
     {
         if (format.ToLower() == "csv")
@@ -132,7 +128,6 @@ public class ReportsController : ControllerBase
         return Encoding.UTF8.GetBytes(sb.ToString());
     }
 
-    // Wrap values in quotes and escape inner quotes so commas/quotes don't break the CSV.
     private static string Escape(string value)
     {
         value ??= "";
